@@ -1,0 +1,5 @@
+{
+  "name": "FRIDAY",
+  "description": "A smart, polite, and reliable AI-based personal voice assistant.",
+  "requestFramePermissions": ["microphone"]
+}
