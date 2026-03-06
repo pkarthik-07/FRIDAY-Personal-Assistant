@@ -16,7 +16,9 @@ import {
   Key,
   Radio,
   Activity,
-  Calendar
+  Calendar,
+  ExternalLink,
+  Search
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { clsx, type ClassValue } from 'clsx';
@@ -33,6 +35,7 @@ interface Message {
   content: string;
   type?: 'text' | 'image';
   imageUrl?: string;
+  sources?: { uri: string, title: string }[];
 }
 
 export default function App() {
@@ -157,6 +160,14 @@ export default function App() {
         }));
         const response = await chatWithFriday(text, history);
         
+        // Extract grounding metadata (Search Results)
+        const sources = response.candidates?.[0]?.groundingMetadata?.groundingChunks
+          ?.filter((chunk: any) => chunk.web)
+          ?.map((chunk: any) => ({
+            uri: chunk.web.uri,
+            title: chunk.web.title
+          }));
+
         // Handle Function Calls
         if (response.functionCalls) {
           for (const call of response.functionCalls) {
@@ -247,7 +258,11 @@ export default function App() {
             }
           }
         } else if (response.text) {
-          const assistantMessage: Message = { role: 'assistant', content: response.text };
+          const assistantMessage: Message = { 
+            role: 'assistant', 
+            content: response.text,
+            sources: sources
+          };
           setMessages(prev => [...prev, assistantMessage]);
 
           if (!isMuted) {
@@ -785,6 +800,29 @@ export default function App() {
                           <Markdown>{msg.content}</Markdown>
                         </div>
                       )}
+                      
+                      {msg.sources && msg.sources.length > 0 && (
+                        <div className="mt-4 pt-4 border-t border-white/5 space-y-2">
+                          <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-white/30 font-mono">
+                            <Search size={10} />
+                            <span>Sources</span>
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {msg.sources.map((source, sIdx) => (
+                              <a
+                                key={sIdx}
+                                href={source.uri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/5 border border-white/5 text-[10px] text-emerald-500/80 hover:bg-white/10 hover:text-emerald-400 transition-all"
+                              >
+                                <span className="truncate max-w-[150px]">{source.title}</span>
+                                <ExternalLink size={8} />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <span className="text-[10px] uppercase tracking-widest text-white/20 mt-2 font-mono">
                       {msg.role === 'user' ? 'User' : 'FRIDAY'}
@@ -813,6 +851,9 @@ export default function App() {
             <div className="max-w-3xl mx-auto relative group">
               <div className="absolute -inset-0.5 bg-emerald-500/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-500" />
               <div className="relative flex items-center gap-4 bg-[#121212] border border-white/10 rounded-2xl p-2 pl-4">
+                <div className="flex items-center gap-2 px-2 border-r border-white/5 text-emerald-500/50" title="Google Search Enabled">
+                  <Search size={16} />
+                </div>
                 <input 
                   type="text"
                   value={inputValue}

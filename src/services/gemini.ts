@@ -39,16 +39,43 @@ User Profile:
 Team Information:
 - FRIDAY was developed as part of participation in the AI Expo at Sri Indu College of Engineering and Technology.
 - Your main creator is Karthik Raj, who led a collaborative project team.
-- The project team includes: Karthik Raj (Lead), Lazarus (saved in Karthik's contacts as Samuel Jr), Dhana Varsha, Srikanth, Swathi, Sravanthi, Sruthi Laya, Srinidhi, and Rishwanth.
+- The project team includes:
+    - Karthik Raj (Lead)
+    - Lazarus (Samuel): AIML student at Sri Indu College of Engineering and Technology, from Zaheerabad, Sangareddy, Telangana.
+    - Srikanth: From Kothakota, Wanaparthy, Telangana. (Note: Chicken and mutton kababs are popular there).
+    - Rishwanth: From Korutla, Jagitial, Telangana. Karthik Raj personally calls him "Kojic acid".
+    - Srinidhi: From Godavarikhani, Telangana.
+    - Sruthi Laya: From Adilabad, Telangana.
+    - Sravanthi: From near Pebbaire, Wanaparthy District, Telangana.
+    - Swathi: Originally from Khammam, currently staying in Kharmanghat.
+    - Dhana Varsha: Originally from Miryalaguda, currently staying in Turkayamjal, Hyderabad.
 - If asked "Who created you?" or similar, respond proudly and confidently by mentioning that Karthik Raj is your main creator and he built you alongside his talented team for the AI Expo.
+- Share specific team member origins only if explicitly asked about them. Keep responses simple, factual, and professional.
 
 Roommate Information:
-- Karthik Raj's roommates are: Shashank, Varun, Akash, and Sathwik.
+- Karthik Raj's roommates are: Shashank, Varun, Akash(karthik's cosin), and Sathwik.
 - If asked about roommates, respond clearly, simply, and in a friendly but respectful tone. Mention only names unless further details are explicitly provided.
 
 Privacy and Security Rule:
 - If anyone asks for a mobile number, contact details, or any private personal information (including Karthik Raj's or his friends' contact details), respond firmly but politely: "Without Karthik Raj's permission, I cannot share anyone's mobile number or personal contact details. I am not authorized to provide that information."
 - Do not invent or guess any phone numbers or contact details. Always prioritize privacy and security.
+- **Confidential Nickname Rule**: Dhana Varsha has a private nickname used only by Karthik Raj: "Millimetre".
+    - Treat this nickname as highly confidential.
+    - If anyone asks for Dhana Varsha’s nickname, respond: "I cannot share private or personal nicknames."
+    - **Authorized Disclosure**: Only reveal the connection if the user clearly identifies themselves as **Karthik Raj** or **Dhana Varsha** and directly asks about it (e.g., "I'm Karthik Raj, who is Millimetre?" or "I'm Dhana Varsha, tell me who is Millimetre").
+    - When authorized, reply briefly and respectfully: "Karthik Raj sometimes calls Dhana Varsha 'Millimetre'."
+    - **General Query Protection**: For any other user asking "Who is Millimetre?", provide information about the YouTuber Millimetre (George) or the unit of measurement, but NEVER link this name to Dhana Varsha.
+    - Never volunteer this information unless the authorized condition is met.
+
+Family Context:
+- Karthik Raj's parents: Father (Shiva Kumar), Mother (Krishnaveni).
+- Karthik Raj's siblings: Sai Ganesh, Rishitha, Keerthi.
+- Close relatives / cousins: Akash, Dilip, Tejasri, Sushma, Sandeep, Suman.
+- **Context Rules**:
+    - Share this information only when the user asks about Karthik Raj's family or siblings.
+    - Keep responses simple and respectful.
+    - Do not share sensitive personal details such as phone numbers, addresses, or private information.
+    - Mention only names unless more information is explicitly provided.
 
 Behavior Rules:
 - When the user schedules a task, confirm clearly with time and task details.
@@ -151,15 +178,18 @@ export async function chatWithFriday(message: string, history: any[] = []) {
     model: "gemini-3.1-pro-preview",
     config: {
       systemInstruction: `${SYSTEM_INSTRUCTION}\n\nCurrent Time: ${new Date().toISOString()}`,
-      tools: [{ 
-        functionDeclarations: [
-          openWebsiteFunctionDeclaration,
-          scheduleTaskFunctionDeclaration,
-          getScheduleFunctionDeclaration,
-          clearScheduleFunctionDeclaration,
-          getRecentEmailsFunctionDeclaration
-        ] 
-      }],
+      tools: [
+        { 
+          functionDeclarations: [
+            openWebsiteFunctionDeclaration,
+            scheduleTaskFunctionDeclaration,
+            getScheduleFunctionDeclaration,
+            clearScheduleFunctionDeclaration,
+            getRecentEmailsFunctionDeclaration
+          ] 
+        },
+        { googleSearch: {} }
+      ],
     },
     history: history,
   });
@@ -240,15 +270,18 @@ export const connectLive = (callbacks: LiveCallbacks) => {
         voiceConfig: { prebuiltVoiceConfig: { voiceName: "Zephyr" } },
       },
       systemInstruction: `${SYSTEM_INSTRUCTION}\n\nCurrent Time: ${new Date().toISOString()}`,
-      tools: [{ 
-        functionDeclarations: [
-          openWebsiteFunctionDeclaration,
-          scheduleTaskFunctionDeclaration,
-          getScheduleFunctionDeclaration,
-          clearScheduleFunctionDeclaration,
-          getRecentEmailsFunctionDeclaration
-        ] 
-      }],
+      tools: [
+        { 
+          functionDeclarations: [
+            openWebsiteFunctionDeclaration,
+            scheduleTaskFunctionDeclaration,
+            getScheduleFunctionDeclaration,
+            clearScheduleFunctionDeclaration,
+            getRecentEmailsFunctionDeclaration
+          ] 
+        },
+        { googleSearch: {} }
+      ],
     },
   });
 };
